@@ -1,14 +1,11 @@
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from pathlib import Path
 from loader_test import load_all_data
 from functions import bandpass_filter, notch_filter, segment_epochs, extract_frequency_bands, compute_power_features, \
     compute_theta_beta_ratio, compute_fooof_features, compute_dfa, is_seizure
 
 EPOCH_DURATION = 58
 # Load all EEG data using loader_test.py
-data_list, annotation_list = load_all_data(['eeg'], tsv_file="net/datasets/SZ2_training_test.tsv")
+data_list, annotation_list = load_all_data(['eeg'], tsv_file="net/datasets/SZ2_training_toy.tsv")
 
 # Initialize list to store summary statistics
 all_features = []
