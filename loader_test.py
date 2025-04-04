@@ -28,16 +28,9 @@ def load_all_data(mods, tsv_file=None):
     prev = ''
     counter = 0
     for rec in recordings:
-        #print(rec[0] + ' ' + rec[1])
+        print(rec[0] + ' ' + rec[1])
         rec_data = Data.loadData(data_path.as_posix(), rec, modalities=mods)
         rec_annotations = Annotation.loadAnnotation(data_path.as_posix(), rec)
-        if prev!=rec[0]: #start of code useful for sub
-            print(counter)
-            print(rec[0])
-            #counter = 0
-        counter = counter+1
-        prev = rec[0] #end
         data.append(rec_data)
         annotations.append(rec_annotations)
-    print(counter) #sub
     return data, annotations

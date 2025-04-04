@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load Dataset
-file_path = 'eeg_features.csv'
+file_path = 'eeg_features_toy.csv'
 df = pd.read_csv(file_path)
 
 # Display first few rows
@@ -30,6 +30,7 @@ print(samples_per_category)
 
 # Drop non-numeric columns before computing correlation
 numeric_df = df.select_dtypes(include=['number'])  # Select only numeric columns
+numeric_df = numeric_df.drop(columns=['epoch', 'recording', 'second'])
 correlation_with_seizure = numeric_df.corr()['seizure'].drop('seizure').sort_values(ascending=False)
 
 print("Correlation of numeric features with 'Seizure':")
