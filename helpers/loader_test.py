@@ -6,7 +6,7 @@ from classes.annotation import Annotation
 
 
 def load_all_data(mods, tsv_file=None):
-    data_path = Path('../data')       # path to dataset
+    data_path = Path('../../data')       # path to dataset
     
     selected_subjects = None
     if tsv_file:

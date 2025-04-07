@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
-from loader_test import load_all_data
-from functions import bandpass_filter, notch_filter, segment_epochs, extract_frequency_bands, compute_power_features, \
+from helpers.loader_test import load_all_data
+from helpers.functions import bandpass_filter, notch_filter, segment_epochs, extract_frequency_bands, compute_power_features, \
     compute_theta_beta_ratio, compute_fooof_features, compute_dfa, is_seizure
 
 EPOCH_DURATION = 58
 # Load all EEG data using loader_test.py
-data_list, annotation_list = load_all_data(['eeg'], tsv_file="net/datasets/SZ2_training_test.tsv")
+data_list, annotation_list = load_all_data(['eeg'], tsv_file="../net/datasets/SZ2_training_test.tsv")
 
 # Initialize list to store summary statistics
 all_features = []
@@ -78,6 +78,6 @@ for rec_idx, data in enumerate(data_list):
 df_features = pd.DataFrame(all_features)
 
 # Save the DataFrame to a CSV file
-df_features.to_csv("eeg_features.csv", index=False)
+df_features.to_csv("../datasets/eeg_features.csv", index=False)
 
 print("Feature extraction completed! Features saved to eeg_features.csv")

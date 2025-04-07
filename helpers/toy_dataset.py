@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 import random
-from loader_test import load_all_data
-from functions import (
+from helpers.loader_test import load_all_data
+from helpers.functions import (
     bandpass_filter, notch_filter, segment_epochs, extract_frequency_bands,
     compute_power_features, compute_theta_beta_ratio, compute_fooof_features,
     compute_dfa, is_seizure
@@ -12,7 +12,7 @@ EPOCH_DURATION = 58  # Full epoch duration (seconds)
 SECOND_DURATION = 1   # 1-second segments
 
 # Load EEG data
-data_list, annotation_list = load_all_data(['eeg'], tsv_file="net/datasets/SZ2_training_toy.tsv")
+data_list, annotation_list = load_all_data(['eeg'], tsv_file="../net/datasets/SZ2_training_toy.tsv")
 
 # List to store features
 all_features = []
@@ -51,7 +51,7 @@ for rec_idx, data in enumerate(data_list):
 
         # Randomly select 66 non-seizure epochs
         random_non_seizure_epochs = random.sample(non_seizure_epochs, min(66, len(non_seizure_epochs)))
-        selected_epochs = set(seizure_epochs + random_non_seizure_epochs)
+        selected_epochs = set(seizure_epochs+ random_non_seizure_epochs)
         
         for i in selected_epochs:
             full_epoch = segmented[i]
@@ -91,5 +91,5 @@ for rec_idx, data in enumerate(data_list):
 df_features = pd.DataFrame(all_features)
 
 # Save to CSV
-df_features.to_csv("eeg_features_toy.csv", index=False)
+df_features.to_csv("../datasets/eeg_features_toy.csv", index=False)
 print("Feature extraction completed! Features saved to eeg_features_toy.csv")

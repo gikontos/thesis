@@ -3,10 +3,10 @@ import numpy as np
 import os
 
 # Load full dataset
-df = pd.read_csv("eeg_features_toy.csv")
+df = pd.read_csv("../datasets/eeg_features_toy.csv")
 
 # Load validation indices from saved file
-val_indices = np.loadtxt("validation_indices.txt", dtype=int)
+val_indices = np.loadtxt("../datasets/validation_indices.txt", dtype=int)
 
 # Extract only validation (test) set events
 df_val = df.loc[val_indices, ["seizure"]]
@@ -38,11 +38,11 @@ true_events = convert_to_events(df_val["seizure"].values)
 recording_duration = len(df_val)  # fs = 1 Hz, so 1 index = 1 second
 
 # Save to CSV (reference file)
-output_dir = "reference"
+output_dir = "../reference"
 os.makedirs(output_dir, exist_ok=True)
 with open(os.path.join(output_dir, "validation_reference.csv"), "w") as f:
     for event in true_events:
         f.write(f"{event[0]},{event[1]}\n")
     f.write(f"0,{recording_duration}\n")  # <- Add final row as required by score.py
 
-print("Reference file saved to 'reference/validation_reference.csv'.")
+print("Reference file saved to '../reference/validation_reference.csv'.")

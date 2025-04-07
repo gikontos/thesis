@@ -70,7 +70,7 @@ predicted_events = convert_to_events(y_pred)
 # Save results in competition format
 output_dir = "submit_output"
 os.makedirs(output_dir, exist_ok=True)
-output_file = os.path.join(output_dir, "predictions.csv")
+output_file = os.path.join(output_dir, "validation_reference.csv")
 
 with open(output_file, "w") as f:
     for event in predicted_events:
