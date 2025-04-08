@@ -5,6 +5,8 @@ from scipy.signal import welch
 import mne
 from fooof import FOOOF
 from nolds import dfa
+from scipy.stats import skew, kurtosis, iqr
+import antropy as ant  
 
 # Bandpass filter: 1-100 Hz
 def bandpass_filter(data, sfreq, lowcut=1, highcut=100, order=4):
@@ -206,3 +208,64 @@ def is_seizure(epoch_start, epoch_end, seizure_events):
         if epoch_start < end and epoch_end > start:  # Overlapping condition
             return 1
     return 0
+
+def generate_ft_surrogate(signal):
+    ft = np.fft.rfft(signal)
+    amplitude = np.abs(ft)
+    phase = np.angle(ft)
+    
+    random_phase = np.random.uniform(0, 2 * np.pi, len(phase))
+    surrogate_ft = amplitude * np.exp(1j * random_phase)
+    
+    surrogate_signal = np.fft.irfft(surrogate_ft)
+    return surrogate_signal
+
+def extract_statistical_features(signal):
+    return {
+        "std": np.std(signal),
+        "iqr": iqr(signal),
+        "skewness": skew(signal),
+        "kurtosis": kurtosis(signal)
+    }
+
+def hjorth_parameters(signal):
+    first_deriv = np.diff(signal)
+    second_deriv = np.diff(first_deriv)
+    
+    var_signal = np.var(signal)
+    var_diff = np.var(first_deriv)
+    var_diff2 = np.var(second_deriv)
+
+    mobility = np.sqrt(var_diff / var_signal) if var_signal != 0 else 0
+    complexity = np.sqrt(var_diff2 / var_diff) / mobility if mobility != 0 else 0
+    return mobility, complexity
+
+def extract_temporal_features(signal):
+    zero_crossings = ((signal[:-1] * signal[1:]) < 0).sum()
+    mobility, complexity = hjorth_parameters(signal)
+    return {
+        "zero_crossings": zero_crossings,
+        "hjorth_mobility": mobility,
+        "hjorth_complexity": complexity
+    }
+
+def extract_complexity_features(signal):
+    return {
+        "approx_entropy": ant.app_entropy(signal),
+        "petrosian_fd": ant.petrosian_fd(signal)
+    }
+
+def extract_spectral_features(signal, sfreq):
+    freqs, psd = welch(signal, sfreq)
+    total_power = np.sum(psd)
+
+    def band_power(low, high):
+        idx = np.logical_and(freqs >= low, freqs <= high)
+        return np.sum(psd[idx]) / total_power if total_power != 0 else 0
+
+    return {
+        "delta": band_power(0.5, 4),
+        "theta": band_power(4, 8),
+        "alpha": band_power(8, 13),
+        "beta": band_power(13, 30)
+    }

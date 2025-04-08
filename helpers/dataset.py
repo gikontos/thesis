@@ -8,7 +8,7 @@ from helpers.functions import bandpass_filter, notch_filter, segment_epochs, ext
 
 EPOCH_DURATION = 58
 # Load all EEG data using loader_test.py
-data_list, annotation_list = load_all_data(['eeg'], tsv_file="../net/datasets/SZ2_training_test.tsv")
+data_list, annotation_list = load_all_data(['eeg'], tsv_file="net/datasets/SZ2_training_test.tsv")
 
 # Initialize list to store summary statistics
 all_features = []

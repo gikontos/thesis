@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load Dataset
-file_path = 'eeg_features_toy.csv'
+file_path = 'datasets/eeg_features_baseline.csv'
 df = pd.read_csv(file_path)
 
 # Display first few rows

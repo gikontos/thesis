@@ -12,7 +12,7 @@ EPOCH_DURATION = 58  # Full epoch duration (seconds)
 SECOND_DURATION = 1   # 1-second segments
 
 # Load EEG data
-data_list, annotation_list = load_all_data(['eeg'], tsv_file="../net/datasets/SZ2_training_toy.tsv")
+data_list, annotation_list = load_all_data(['eeg'], tsv_file="net/datasets/SZ2_training_toy.tsv")
 
 # List to store features
 all_features = []
