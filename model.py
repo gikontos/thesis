@@ -5,7 +5,7 @@ from generator import SequentialGenerator
 from utils import get_events
 
 def predict(submission_path, recording):
-    model_path = os.path.join(submission_path, 'xgb_model.pkl')
+    model_path = os.path.join(submission_path, 'seizft_xgb_model.pkl')
     model = joblib.load(model_path)
 
     generator = SequentialGenerator(recording)

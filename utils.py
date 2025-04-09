@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_events(y_pred, recording, threshold=0.5, min_duration=1):
+def get_events(y_pred, recording, threshold=0.3, min_duration=3, smooth_window=3):
     """
     Convert prediction probabilities to seizure events.
 
@@ -13,6 +13,9 @@ def get_events(y_pred, recording, threshold=0.5, min_duration=1):
     Returns:
         List of [start, end] seizure event times (in seconds).
     """
+    if smooth_window > 1:
+        y_pred = np.convolve(y_pred, np.ones(smooth_window)/smooth_window, mode='same')
+    
     seizure_mask = y_pred >= threshold
     events = []
     start = None

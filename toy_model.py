@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classification_report
 
 # Load the dataset
-df = pd.read_csv("eeg_features_toy.csv")
+df = pd.read_csv("datasets/eeg_features_toy.csv")
 
 # Drop non-numeric and unnecessary columns (e.g., channel names, epoch numbers)
 df = df.drop(columns=["recording", "epoch", "channel", "second"])
