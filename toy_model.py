@@ -4,12 +4,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classification_report
+import joblib
 
 # Load the dataset
 df = pd.read_csv("datasets/eeg_features_toy.csv")
 
 # Drop non-numeric and unnecessary columns (e.g., channel names, epoch numbers)
-df = df.drop(columns=["recording", "epoch", "channel", "second"])
+df = df.drop(columns=["recording", "epoch", "channel", "second", "alpha_peak"])
 
 # Handle missing values (optional)
 #df = df.dropna()  # Remove rows with missing values
@@ -40,3 +41,8 @@ conf_matrix = confusion_matrix(y_test, y_pred)
 print(f"Accuracy: {accuracy:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print("\nConfusion Matrix:\n", conf_matrix)
+
+joblib.dump(clf, "rf_model.pkl")
+joblib.dump(scaler, "scaler.pkl")
+
+print("Model and scaler saved successfully.")
