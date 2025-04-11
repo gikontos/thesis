@@ -20,31 +20,45 @@ class SequentialGenerator:
     def _extract_features(self):
         EPOCH_DURATION = 58
         SECOND_DURATION = 1
-        all_features = []
+        sfreq = self.recording.fs[0]
 
+        # Preprocess all channels and crop to minimum length
+        min_len = min(len(ch) for ch in self.recording.data)
+        preprocessed = []
         for ch_idx, ch_data in enumerate(self.recording.data):
-            sfreq = self.recording.fs[ch_idx]
-
-            # Preprocessing
+            ch_data = ch_data[:min_len]
             bandpassed = bandpass_filter(ch_data, sfreq)
             filtered = notch_filter(bandpassed, sfreq)
+            preprocessed.append(filtered)
+        
+        multi_ch_data = np.stack(preprocessed)  # shape: (n_channels, n_samples)
+        n_channels, n_samples = multi_ch_data.shape
 
-            # Epoch segmentation
-            epochs = segment_epochs(filtered, sfreq, EPOCH_DURATION)
+        # Segment full data into 1-second slices
+        segment_len = int(SECOND_DURATION * sfreq)
+        total_segments = n_samples // segment_len
 
-            for i, epoch in enumerate(epochs):
-                one_sec_segments = segment_epochs(epoch, sfreq, SECOND_DURATION)
+        all_features = []
 
-                for sec_idx, segment in enumerate(one_sec_segments):
-                    # Extract all feature types
-                    f_stat = extract_statistical_features(segment)
-                    f_temp = extract_temporal_features(segment)
-                    f_comp = extract_complexity_features(segment)
-                    f_spec = extract_spectral_features(segment, sfreq)
+        for i in range(total_segments):
+            segment = multi_ch_data[:, i*segment_len:(i+1)*segment_len]
 
-                    # Combine into single flat vector
-                    feature_vector = {**f_stat, **f_temp, **f_comp, **f_spec}
-                    all_features.append(feature_vector)
+            per_channel_features = []
+
+            for ch_idx in range(n_channels):
+                ch_segment = segment[ch_idx]
+                f_stat = extract_statistical_features(ch_segment)
+                f_temp = extract_temporal_features(ch_segment)
+                f_comp = extract_complexity_features(ch_segment)
+                f_spec = extract_spectral_features(ch_segment, sfreq)
+
+                feature_dict = {**f_stat, **f_temp, **f_comp, **f_spec}
+                per_channel_features.append(feature_dict)
+
+            # Average each feature across channels
+            keys = per_channel_features[0].keys()
+            averaged = {k: float(np.mean([ch[k] for ch in per_channel_features])) for k in keys}
+            all_features.append(averaged)
 
         if all_features:
             keys = list(all_features[0].keys())
