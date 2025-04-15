@@ -15,7 +15,7 @@ for i, recording in enumerate(data_list):
     predicted_events = predict("", recording)
 
     # Save predicted events to CSV
-    recording_id = f"rec_{i+1:03d}_toy_test2.csv"
+    recording_id = f"rec_{i+1:03d}_baseline_test2.csv"
     pred_path = os.path.join("submit_output", recording_id)
     with open(pred_path, "w", newline="") as f:
         writer = csv.writer(f)
