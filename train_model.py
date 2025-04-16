@@ -5,7 +5,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 import joblib  # for saving the model
 
 # Load dataset
-df = pd.read_csv("datasets/eeg_features_baseline.csv")
+df = pd.read_csv("datasets/features_aug_1_2.csv")
 
 # Features and labels
 X = df.drop(columns=["seizure", "recording", "channel", "epoch", "second", "augmentation"])
@@ -31,5 +31,5 @@ print(classification_report(y_val, y_pred))
 print(confusion_matrix(y_val, y_pred))
 
 # Save the model
-joblib.dump(model, "seizft_xgb_model.pkl")
+joblib.dump(model, "xgb_model_aug_1_2.pkl")
 print("Model saved to seizft_xgb_model.pkl")

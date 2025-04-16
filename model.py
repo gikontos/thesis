@@ -1,11 +1,11 @@
 import os
 import joblib
 import numpy as np
-from generator import SequentialGenerator
+from giorgos_generator import SequentialGenerator
 from utils import get_events
 
 def predict(submission_path, recording):
-    model_path = os.path.join(submission_path, 'seizft_xgb_model.pkl')
+    model_path = os.path.join(submission_path, 'xgb_model_aug_1_2.pkl')
     model = joblib.load(model_path)
 
     generator = SequentialGenerator(recording)
